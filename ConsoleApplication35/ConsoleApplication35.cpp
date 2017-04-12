@@ -13,13 +13,15 @@ const int ARRAYSIZE = 100;
 
 class Airplane
 {
-	string planeNumber;
-	string planeName;
-	int capacity;
+private:
+	 string planeNumber;
+	 string planeName;
+	 int capacity;
+	 int speed;
 
 public:
 	Airplane();
-	Airplane(string num, string name, int cap);
+	Airplane(string num, string name, int cap, int sp);
 	void CapturePlane();
 	void ShowPlane();
 	int SavePlane(ofstream &outfile);
@@ -37,7 +39,7 @@ public:
 	~PlaneList();
 	void GetUserInput();
 	void ShowPlaneList();
-	void checkDup();
+	
 	int SavePlaneList(string filename);
 	int ReadPlaneList(string filename);
 };
@@ -46,13 +48,15 @@ public:
 	planeNumber = ""; 
 	planeName = ""; 
 	capacity = 0;
+	speed = 0;
 }
 
- Airplane::Airplane(string num, string name, int cap)
+ Airplane::Airplane(string num, string name, int cap, int sp)
 {
 	planeNumber = num;
 	planeName = name;
 	capacity = cap;
+	speed = sp;
 
 }
 
@@ -64,6 +68,8 @@ void Airplane::CapturePlane()
 	getline(cin, planeName);
 	cout << "What is the Passenger Capacity -->";
 	cin >> capacity;
+	cout << "What is the Top speed of the plane -->";
+	cin >> speed;
 	cin.ignore();
 	cin.clear();
 
@@ -71,7 +77,7 @@ void Airplane::CapturePlane()
 
 void Airplane::ShowPlane()
 {
-	cout << "Number : " << planeNumber << "Name : " << planeName << "Capacity: " << capacity << endl;
+	cout << "Number : " << planeNumber << "Name : " << planeName << "Capacity: " << capacity << "Top Speed:" << speed << endl;
 
 }
 
@@ -79,7 +85,7 @@ int Airplane::SavePlane(ofstream& outfile)
 {
 	if (outfile.is_open())
 	{
-		outfile << planeNumber << "|" << planeName << "|" << capacity << endl;
+		outfile << planeNumber << "|" << planeName << "|" << capacity << "|" << speed << endl;
 		return 0;
 	}
 	else
@@ -162,7 +168,7 @@ int PlaneList::SavePlaneList(string filename)
 }
 int PlaneList::ReadPlaneList(string filename)
 {
-	string inum, iname, icap;
+	string inum, iname, icap, isp;
 	ifstream infile(filename, ios::in);
 	if (!infile)
 	{
@@ -181,8 +187,11 @@ int PlaneList::ReadPlaneList(string filename)
 		{
 			getline(infile, iname, '|');
 			getline(infile, icap);
+
 			int cap = stoi(icap);
-			list[numrecords] = new Airplane(inum, iname, cap);
+			getline(infile, isp);
+			int sp = stoi(isp);
+			list[numrecords] = new Airplane(inum, iname, cap, sp);
 			numrecords++;
 
 		}
